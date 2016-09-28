@@ -1,0 +1,6 @@
+{
+  "extends": "foobarhq/browser",
+  "rules": {
+    "import/no-commonjs": 0
+  }
+}
