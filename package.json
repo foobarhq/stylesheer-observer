@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Observer for changes made to StyleSheetLists",
   "main": "index.js",
-  "directories": {
+  "scripts": {
     "test": "karma start karma.conf.js --single-run",
     "test:watch": "karma start karma.conf.js",
     "build": "babel src --out-dir lib"
@@ -35,8 +35,8 @@
   "devDependencies": {
     "mocha": "^3.0.2"
   },
-  "scripts": {
-    "test": "mocha"
+  "directories": {
+    "test": "test"
   },
   "repository": {
     "type": "git",
