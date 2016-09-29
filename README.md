@@ -46,6 +46,10 @@ observer.observe(aShadowRoot, { watchChildren: true });
 This project uses `WeakMap`, `MutationObserver` and `Symbol` internally, if your targeted browsers do not support 
 either, you will need to install a polyfill in order to use the `StyleSheetObserver`.
 
+## Browser Support
+
+
+
 ## Interfaces
 
 Interfaces based on native APIs `ResizeObserver` and `MutationObserver`.

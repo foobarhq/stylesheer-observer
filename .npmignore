@@ -7,3 +7,4 @@ test
 .gitignore
 karma.conf.js
 .idea
+browserstack-keys.json

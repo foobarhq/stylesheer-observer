@@ -253,6 +253,33 @@ describe('StyleSheetObserver', () => {
     const style = addStyle(document);
   });
 
+  it('only sends completely loaded styleSheets', done => {
+    function testLoaded(mutation: StyleSheetObserverEntry) {
+      for (const sheet: CSSStyleSheet of mutation.addedStyleSheets) {
+        const rules = sheet.cssRules || sheet.rules;
+        expect(rules.length).to.equal(1);
+      }
+    }
+
+    const observer = new StyleSheetObserver(multiPassTest(function *testObserver() {
+      // first call to callback
+      testLoaded(yield);
+
+      // second call to callback
+      testLoaded(yield);
+
+      done();
+    }));
+
+    observer.observe(document);
+
+    // this will trigger the callback a first time
+    addStyle(document);
+
+    // this will trigger the callback a second time
+    addStyleSheet(document);
+  });
+
   if (typeof Element.prototype.attachShadow === 'function') {
     it('can observe shadow roots', done => {
 
@@ -292,7 +319,7 @@ function addStyleSheet(doc) {
   assert(doc instanceof Document || doc instanceof DocumentFragment, 'doc should be a document(-fragment)');
 
   const link: HTMLLinkElement = document.createElement('link');
-  link.href = '/base/test/resources/stylesheet.css';
+  link.href = '/resources/stylesheet.css';
   link.rel = 'stylesheet';
   link.type = 'text/css';
 
