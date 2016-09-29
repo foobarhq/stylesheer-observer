@@ -1,10 +1,10 @@
 
 export default function getMutationObserver() {
-  if (typeof MutationObserver === 'function') {
+  if (typeof MutationObserver !== 'undefined') {
     return MutationObserver;
   }
 
-  if (typeof WebkitMutationObserver === 'function') {
+  if (typeof WebkitMutationObserver !== 'undefined') {
     return WebkitMutationObserver; // eslint-disable-line no-undef
   }
 
