@@ -1,6 +1,6 @@
 {
   "name": "stylesheet-observer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Observer for changes made to StyleSheetLists",
   "main": "index.js",
   "scripts": {
