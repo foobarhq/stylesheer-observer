@@ -133,8 +133,28 @@ function isProxy(node) {
   return Boolean(node[isProxyNode]);
 }
 
-function isLoading(node) {
-  return node.nodeName === 'LINK' && !node.sheet;
+function isLoading(node: LinkStyle) {
+  if (node.nodeName !== 'LINK') {
+    return false;
+  }
+
+  // Chrome Behavior.
+  if (node.sheet == null) {
+    return true;
+  }
+
+  // Firefox Behavior
+  if (isLoadingFirefox(node)) {
+    return true;
+  }
+
+  // Edge Behavior
+  // This will cause false positives, thanks edge.
+  if (node.sheet.cssText === '') {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -145,9 +165,9 @@ function isLoading(node) {
  * @returns {boolean} The styleSheet has loaded.
  */
 function isLoadingFirefox(node: LinkStyle): boolean {
-
   const sheet = node.sheet;
 
+  // Firefox Behavior.
   try {
     // noinspection BadExpressionStatementJS
     sheet.cssRules || sheet.rules; // eslint-disable-line
