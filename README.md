@@ -1,15 +1,21 @@
 # StyleSheet Observer
 
-Detect changes made to StyleSheetLists.
+Detect changes made to [`StyleSheetLists`](https://developer.mozilla.org/en-US/docs/Web/API/StyleSheetList).
 
-This class calls the callback once a [`StyleSheet`](https://developer.mozilla.org/en-US/docs/Web/API/StyleSheet) 
-instance has been either added or removed from a document or document fragment.
+This library enables you to register a function that will be called every time 
+a [`StyleSheet`](https://developer.mozilla.org/en-US/docs/Web/API/StyleSheet) instance has been either added or 
+removed from a document or document fragment's styleSheet property.
+
+## Install
+
+`npm install --save stylesheet-observer`
 
 ## Usage
 
 ```javascript
 import StyleSheetObserver from 'stylesheet-observer';
 
+// register the observer along with the callback.
 const observer = new StyleSheetObserver(changes => {
   // changes.target;
   // changes.removedStyleSheets;
@@ -55,8 +61,13 @@ interface StyleSheetObserver {
 type DocumentLike = Document | DocumentFragment;
 
 type StyleSheetObserverEntry = {
+    /** Observed element on which the change occured */
     target: DocumentLike,
+    
+    /** List of styleSheets that were removed */
     removedStyleSheets: StyleSheet[],
+    
+    /** List of styleSheets that were added */
     addedStyleSheets: StyleSheet[],
 };
 

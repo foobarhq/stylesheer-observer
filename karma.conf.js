@@ -64,9 +64,11 @@ module.exports = function configureKarma(config) {
       require('karma-mocha'),
       require('karma-coverage'),
       require('karma-phantomjs-launcher'),
+      require('karma-chrome-launcher'),
+      require('karma-firefox-launcher'),
       require('karma-spec-reporter'),
     ],
 
-    browsers: ['PhantomJS'],
+    browsers: ['PhantomJS', 'Chrome', 'ChromeCanary', 'Firefox'],
   });
 };

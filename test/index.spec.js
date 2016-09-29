@@ -2,7 +2,7 @@ import assert from 'assert';
 import chai, { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 import StyleSheetObserver_ from '../src/index';
-import type { DocumentLike } from '../types';
+import type { DocumentLike, StyleSheetObserverEntry } from '../types';
 import { multiPassTest } from './TestUtil';
 
 chai.use(dirtyChai);
@@ -51,7 +51,8 @@ describe('StyleSheetObserver', () => {
   });
 
   it('throws when watching something else than a Document / DocumentFragment', () => {
-    const observer = new StyleSheetObserver(() => {});
+    const observer = new StyleSheetObserver(() => {
+    });
 
     expect(() => {
       observer.observe(document.createElement('div'));
@@ -251,6 +252,34 @@ describe('StyleSheetObserver', () => {
     // this will trigger the callback a first time
     const style = addStyle(document);
   });
+
+  if (typeof Element.prototype.attachShadow === 'function') {
+    it('can observe shadow roots', done => {
+
+      const observer = new StyleSheetObserver(multiPassTest(function *testObserver() {
+        // first call to callback
+        const changes: StyleSheetObserverEntry = yield;
+        expect(changes.addedStyleSheets.length).to.equal(1);
+        expect(changes.removedStyleSheets.length).to.equal(0);
+        expect(changes.addedStyleSheets[0]).to.equal(shadowStyle.sheet);
+        expect(changes.target).to.equal(shadowRoot);
+
+        setTimeout(() => done(), 1);
+      }));
+
+      const shadowDiv = document.createElement('div');
+      const shadowRoot = shadowDiv.attachShadow({ mode: 'closed' });
+      document.body.appendChild(shadowDiv);
+
+      observer.observe(shadowRoot, { children: true });
+
+      // this should not trigger anything.
+      addStyle(document);
+
+      // this should trigger the observer.
+      const shadowStyle = addStyle(shadowRoot);
+    });
+  }
 });
 
 function testMutation(mutation, { target, added = 0, removed = 0 } = {}) {
