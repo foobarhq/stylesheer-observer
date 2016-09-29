@@ -13,7 +13,7 @@ module.exports = {
   ],
 
   preprocessors: {
-    'test/index.spec.js': ['webpack'],
+    'test/index.spec.js': ['webpack', 'sourcemap'],
   },
 
   proxies: {
@@ -43,8 +43,8 @@ module.exports = {
       }],
     },
 
-    devtool: 'cheap-module-source-map',
-    // devtool: 'inline-source-map',
+    // devtool: 'cheap-module-source-map',
+    devtool: 'inline-source-map',
   },
 
   webpackMiddleware: {
@@ -71,5 +71,6 @@ module.exports = {
     require('karma-mocha'),
     require('karma-coverage'),
     require('karma-spec-reporter'),
+    require('karma-sourcemap-loader'),
   ],
 };
