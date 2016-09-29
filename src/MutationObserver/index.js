@@ -55,8 +55,12 @@ export default class DomMutStyleSheetObserver extends BaseStyleSheetObserver {
     this.targetManagers.set(target, new TargetManager(target, this));
 
     const styleElementContainer = watchChildren ? target : getStylesRoot(target);
-    const config = watchChildren ? CONFIG : Object.create(CONFIG, {
-      subtree: { value: true },
+    // const config = watchChildren ? CONFIG : Object.create(CONFIG, {
+    //   subtree: { value: true },
+    // });
+    // IE Compat
+    const config = watchChildren ? CONFIG : Object.assign({}, CONFIG, {
+      subtree: true,
     });
 
     this.observer.observe(styleElementContainer, config);

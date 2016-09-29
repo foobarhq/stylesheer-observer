@@ -66,8 +66,7 @@ conf.customLaunchers = {
   },
 };
 
-// conf.browsers = ['bsMacFirefox14', 'bsMacChrome38', 'bsMacSafari6', 'bsMacOpera20', 'bsWinEdge13', 'bsWinIe11'];
-conf.browsers = ['bsWinIe11'];
+conf.browsers = ['bsMacFirefox14', 'bsMacChrome38', 'bsMacSafari6', 'bsMacOpera20', 'bsWinEdge13', 'bsWinIe11'];
 
 module.exports = function configureKarma(config) {
   config.set(conf);
