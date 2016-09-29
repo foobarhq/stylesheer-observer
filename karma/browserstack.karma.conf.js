@@ -22,22 +22,23 @@ if (process.env.BROWSERSTACK_USERNAME && process.env.BROWSERSTACK_ACCESS_KEY) {
 }
 
 conf.customLaunchers = {
-  bs_firefox_mac: {
+  bsMacFirefox21: {
     base: 'BrowserStack',
-      browser: 'firefox',
-      browser_version: '21.0',
-      os: 'OS X',
-      os_version: 'Mountain Lion',
+    browser: 'firefox',
+    browser_version: '21.0',
+    os: 'OS X',
+    os_version: 'Mountain Lion',
   },
-  bs_iphone5: {
+  bsMacFirefox48: {
     base: 'BrowserStack',
-      device: 'iPhone 5',
-      os: 'ios',
-      os_version: '6.0',
-  },
+    browser: 'firefox',
+    browser_version: '48.0',
+    os: 'OS X',
+    os_version: 'El Capitan',
+  }
 };
 
-conf.browsers = ['bs_firefox_mac', 'bs_iphone5'];
+conf.browsers = ['bsMacFirefox48'];
 
 module.exports = function configureKarma(config) {
   config.set(conf);

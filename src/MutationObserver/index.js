@@ -1,6 +1,7 @@
 import type { StyleSheetObserverCallback, DocumentLike } from '../../types';
 import BaseStyleSheetObserver from '../BaseStyleSheetObserver';
 import TargetManager from './TargetManager';
+import getMutationObserver from './get-mutation-observer';
 
 const CONFIG = { attributes: false, childList: true, characterData: false };
 
@@ -18,6 +19,8 @@ export default class DomMutStyleSheetObserver extends BaseStyleSheetObserver {
    */
   constructor(callback: StyleSheetObserverCallback) {
     super(callback);
+
+    const MutationObserver = getMutationObserver();
 
     this.observer = new MutationObserver(mutations => {
       for (const mutation: MutationRecord of mutations) {

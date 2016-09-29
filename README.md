@@ -48,7 +48,15 @@ either, you will need to install a polyfill in order to use the `StyleSheetObser
 
 ## Browser Support
 
+Tested on the following with the babel polyfill:
 
+- Chrome >= 18
+- Firefox >= 14
+- IE >= 11
+- Opera >= 15
+- Safari >= 6
+
+It might work on older versions if you polyfill `MutationObserver`.
 
 ## Interfaces
 

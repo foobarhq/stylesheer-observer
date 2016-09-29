@@ -36,11 +36,12 @@ export default class StyleSheetHolder {
         addedNode[this.cacheSymbol] = {};
       }
 
-      if (isLoading(addedNode)) {
+      if (isLoading(addedNode) || isLoadingFirefox(addedNode)) {
         this.waitForStyleSheet(addedNode);
       } else {
-        addedNode[this.cacheSymbol].styleSheet = addedNode.sheet;
-        addedStyleSheets.push(addedNode.sheet);
+        const sheet = addedNode.sheet;
+        addedNode[this.cacheSymbol].styleSheet = sheet;
+        addedStyleSheets.push(sheet);
       }
 
       if (addedNode.nodeName === 'STYLE') {
@@ -80,10 +81,14 @@ export default class StyleSheetHolder {
       return;
     }
 
-    if (isLoading(node)) {
+    if (isLoading(node) || isLoadingFirefox(node)) {
       return this.waitForStyleSheet(node);
     }
 
+    this.handleAsynclyLoadedNode(node);
+  }
+
+  handleAsynclyLoadedNode(node) {
     const cache: NodeCache = node[this.cacheSymbol];
     const cachedStyleSheet = cache.styleSheet;
     cache.styleSheet = node.sheet;
@@ -101,7 +106,7 @@ export default class StyleSheetHolder {
     proxy.addEventListener('load', () => {
       deleteProxy(cache);
 
-      this.handleNodeEdit(node);
+      this.handleAsynclyLoadedNode(node);
     });
 
     proxy.addEventListener('error', () => {
@@ -130,6 +135,30 @@ function isProxy(node) {
 
 function isLoading(node) {
   return node.nodeName === 'LINK' && !node.sheet;
+}
+
+/**
+ * Workaround firefox's system.
+ * Firefox adds the sheet even if it hasn't loaded yet and throws if you try to access the cssRules property.
+ *
+ * @param node - A node implementing LinkStyle.
+ * @returns {boolean} The styleSheet has loaded.
+ */
+function isLoadingFirefox(node: LinkStyle): boolean {
+
+  const sheet = node.sheet;
+
+  try {
+    // noinspection BadExpressionStatementJS
+    sheet.cssRules || sheet.rules; // eslint-disable-line
+
+    // we accessed them, which means that the sheet is both loaded (or not on firefox) and non-scrambled.
+    return false;
+  } catch (e) {
+    // Could be SecurityError but that one means that the contents are scrambled (cross-origin).
+    // So if it is not InvalidAccessError, the sheet is loaded.
+    return e.name === 'InvalidAccessError';
+  }
 }
 
 function deleteProxy(cache: NodeCache) {

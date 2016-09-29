@@ -169,7 +169,7 @@ describe('StyleSheetObserver', () => {
       });
 
       // this will cause the stylesheet to regenerate
-      link.href = '/base/test/resources/stylesheet2.css';
+      link.href = '/resources/stylesheet2.css';
 
       // second call to callback - content edition
       testMutation(yield, {
@@ -254,19 +254,28 @@ describe('StyleSheetObserver', () => {
   });
 
   it('only sends completely loaded styleSheets', done => {
-    function testLoaded(mutation: StyleSheetObserverEntry) {
-      for (const sheet: CSSStyleSheet of mutation.addedStyleSheets) {
-        const rules = sheet.cssRules || sheet.rules;
-        expect(rules.length).to.equal(1);
-      }
+  // it('only sends completely loaded styleSheets', done => {
+    function testLoaded(mutation: StyleSheetObserverEntry, i) {
+      expect(() => {
+        for (const sheet: CSSStyleSheet of mutation.addedStyleSheets) {
+          const rules = sheet.cssRules || sheet.rules;
+          expect(rules.length).to.equal(1);
+        }
+      }).to.not.throw(Error, /.*/, `StyleSheet ${i} was not loaded before being dispatched`);
     }
 
     const observer = new StyleSheetObserver(multiPassTest(function *testObserver() {
       // first call to callback
-      testLoaded(yield);
+      testLoaded(yield, 1);
 
       // second call to callback
-      testLoaded(yield);
+      testLoaded(yield, 2);
+
+      // cause third call
+      linkNode.href = `/resources/stylesheet2.css?t=${Math.random()}`; // force ignore cache
+
+      // third call
+      testLoaded(yield, 3);
 
       done();
     }));
@@ -277,7 +286,7 @@ describe('StyleSheetObserver', () => {
     addStyle(document);
 
     // this will trigger the callback a second time
-    addStyleSheet(document);
+    const linkNode = addStyleSheet(document);
   });
 
   if (typeof Element.prototype.attachShadow === 'function') {
@@ -319,7 +328,7 @@ function addStyleSheet(doc) {
   assert(doc instanceof Document || doc instanceof DocumentFragment, 'doc should be a document(-fragment)');
 
   const link: HTMLLinkElement = document.createElement('link');
-  link.href = '/resources/stylesheet.css';
+  link.href = `/resources/stylesheet.css?t=${Math.random()}`; // force ignore cache
   link.rel = 'stylesheet';
   link.type = 'text/css';
 
