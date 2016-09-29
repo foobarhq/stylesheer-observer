@@ -10,8 +10,7 @@ conf.plugins.push(
   require('karma-firefox-launcher')
 );
 
-conf.browsers = ['Firefox'];
-// conf.browsers = ['PhantomJS', 'Chrome', 'ChromeCanary', 'Firefox'];
+conf.browsers = ['PhantomJS', 'Chrome', 'ChromeCanary', 'Firefox'];
 
 module.exports = function configureKarma(config) {
   config.set(conf);
