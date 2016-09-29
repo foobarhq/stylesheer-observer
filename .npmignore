@@ -5,6 +5,10 @@ test
 .babelrc
 .eslintrc
 .gitignore
-karma.conf.js
 .idea
 browserstack-keys.json
+dist
+karma
+webpack
+*.log
+bower.json

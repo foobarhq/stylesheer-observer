@@ -3,6 +3,13 @@
 'use strict';
 
 const path = require('path');
+const webpackConfig = require('../webpack/base.webpack.conf');
+webpackConfig.devtool = 'inline-source-map';
+webpackConfig.module.preLoaders.push({
+  test: /\.js$/,
+  include: path.resolve(__dirname, '../src'),
+  loader: 'babel-istanbul-loader',
+});
 
 module.exports = {
   frameworks: ['mocha'],
@@ -29,23 +36,7 @@ module.exports = {
     dir: 'coverage/',
   },
 
-  webpack: {
-    // webpack configuration
-    module: {
-      preLoaders: [{
-        test: /\.js$/,
-        loader: 'babel',
-        exclude: /node_modules/,
-      }, {
-        test: /\.js$/,
-        include: path.resolve(__dirname, '../src'),
-        loader: 'babel-istanbul-loader',
-      }],
-    },
-
-    // devtool: 'cheap-module-source-map',
-    devtool: 'inline-source-map',
-  },
+  webpack: webpackConfig,
 
   webpackMiddleware: {
     // webpack-dev-middleware configuration
