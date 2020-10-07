@@ -53,6 +53,10 @@ function isDocumentOrDocumentFragment(item) {
   if (typeof DocumentFragment === 'function' && item instanceof DocumentFragment) {
     return true;
   }
+  
+  if (item.defaultView && item.defaultView.HTMLDocument && item instanceof item.defaultView.HTMLDocument) {
+    return true;
+  }
 
   return false;
 }
